@@ -18,7 +18,18 @@ public class IndexModel : PageModel
     [BindProperty(SupportsGet = true)]
     public int PageNumber {get; set;}=1;
 
+    [BindProperty(SupportsGet = true)]
+    public int Year {get; set;}
+
+    [BindProperty(SupportsGet = true)]
+    public string Company {get; set;}="";
+
+    [BindProperty(SupportsGet = true)]
+    public string Category {get; set;}="";
+
     public IEnumerable<AwardModel> awards {get; set;}
+
+    
     public void OnGet()
     {
         string filePath = "Data/Game_Awards_Data_Stable.xlsx";
