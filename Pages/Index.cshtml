@@ -1,5 +1,6 @@
-﻿@page
+﻿@page "{PageNumber:int?}"
 @using AngleSharp.Common
+@using Microsoft.Extensions.ObjectPool
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
@@ -7,6 +8,10 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
+    @{
+        var myDataModel = new { PageName = "Index", PageNumber = Model.PageNumber};
+    }
+    @await Html.PartialAsync("_MakePagesPartial", myDataModel)
     <table>
     <thead>
     <tr>
@@ -16,8 +21,9 @@
     }
     </tr>
     </thead>
-    @foreach(var award in Model.awards)
+    @for(int i=25*(Model.PageNumber-1);i<25*Model.PageNumber;i++)
     {
+        AwardModel award=Model.awards.GetItemByIndex(i);
         <tr>
         @foreach(var property in award.GetType().GetProperties())
         {
@@ -26,5 +32,5 @@
         </tr>
     }
     </table>
-
+    @await Html.PartialAsync("_MakePagesPartial", myDataModel)
 </div>

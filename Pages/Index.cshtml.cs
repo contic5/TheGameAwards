@@ -15,6 +15,9 @@ namespace TheGameAwards.Pages;
 
 public class IndexModel : PageModel
 {
+    [BindProperty(SupportsGet = true)]
+    public int PageNumber {get; set;}=1;
+
     public IEnumerable<AwardModel> awards {get; set;}
     public void OnGet()
     {
