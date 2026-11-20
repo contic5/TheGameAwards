@@ -11,7 +11,7 @@ def save_data(game_list):
 def main():
     game_list=[]
     id_num=1
-    start_year=2026
+    start_year=2014
 
     for year in range(2014,2027):
         if year<start_year:
@@ -41,6 +41,12 @@ def main():
                 winner_company=b_elements[0].text
                 if len(b_elements)>1:
                     winner_company=b_elements[1].text
+
+                if "–" in winner:
+                    parts=winner.split("–")
+                    parts=[part.strip() for part in parts]
+                    winner=parts[0]
+                    winner_company=parts[1]
 
                 game_dict={"ID":id_num,"Nominee":winner,"Company":winner_company,"Category":categories[i],"Year":year,"Winner":True}
                 game_list.append(game_dict)

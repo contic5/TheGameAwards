@@ -1,4 +1,5 @@
 ﻿@page
+@using AngleSharp.Common
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
@@ -6,5 +7,24 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <table>
+    <thead>
+    <tr>
+    @foreach(var property in Model.awards.GetItemByIndex(0).GetType().GetProperties())
+    {
+        <th>@property.Name</th>
+    }
+    </tr>
+    </thead>
+    @foreach(var award in Model.awards)
+    {
+        <tr>
+        @foreach(var property in award.GetType().GetProperties())
+        {
+            <td>@property.GetValue(award)</td>
+        }
+        </tr>
+    }
+    </table>
+
 </div>

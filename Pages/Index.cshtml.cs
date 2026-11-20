@@ -15,8 +15,17 @@ namespace TheGameAwards.Pages;
 
 public class IndexModel : PageModel
 {
+    public IEnumerable<AwardModel> awards {get; set;}
     public void OnGet()
     {
+        string filePath = "Data/Game_Awards_Data_Stable.xlsx";
 
+        // This single line reads the sheet and binds it to your model list
+        awards = MiniExcel.Query<AwardModel>(filePath);
+
+        foreach (var award in awards)
+        {
+            Console.WriteLine($"{award.Nominee} ({award.Year}))");
+        }
     }
 }
