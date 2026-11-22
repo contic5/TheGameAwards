@@ -11,7 +11,7 @@ public class SharedFunctions
 {
     public static List<Object> Slice(IEnumerable<Object> arr,int PageNumber)
     {
-        return arr.Skip((PageNumber-1)*100).Take(100).ToList();
+        return arr.Skip((PageNumber-1)*50).Take(50).ToList();
     }
     public static List<Object> SortValues(IEnumerable<Object> arr,string SortBy,bool SortAscending)
     {
@@ -24,7 +24,7 @@ public class SharedFunctions
         }
         if(SortAscending==false)
         {
-            arr.Reverse();
+            arr=arr.Reverse();
         }
         return arr.ToList();
     }

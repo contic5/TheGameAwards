@@ -10,6 +10,8 @@ using System.Reflection.Metadata.Ecma335;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using AngleSharp.Common;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace TheGameAwards.Pages;
 
@@ -29,6 +31,16 @@ public class IndexModel : PageModel
 
     public IEnumerable<AwardModel> awards {get; set;}
 
+
+    public List<SelectListItem> SortByItems {get; set;}=[];
+    
+    [BindProperty(SupportsGet = true)]
+    public string SortBy {get; set;}="";
+
+    [BindProperty(SupportsGet = true)]
+    public string Direction {get; set;}="-"; 
+
+    public int TotalPages {get; set;}=0;
     
     public void OnGet()
     {
@@ -37,6 +49,17 @@ public class IndexModel : PageModel
         // This single line reads the sheet and binds it to your model list
         awards = MiniExcel.Query<AwardModel>(filePath);
 
+        TotalPages= (int)Math.Ceiling(1.0*awards.Count()/50);
+
+        Console.WriteLine($"Sort By: {SortBy} Sort Direction {Direction}");
+
+        if(SortBy!="")
+        {
+            awards=SharedFunctions.SortValues(awards,SortBy,Direction=="-").Select(item => (AwardModel)item).ToList();
+        }
+
+        awards= SharedFunctions.Slice(awards,PageNumber).Select(item => (AwardModel)item).ToList();
+        SortByItems=SharedFunctions.MakeSelectListItemsFromColumnNames(awards.GetItemByIndex(0));
         foreach (var award in awards)
         {
             Console.WriteLine($"{award.Nominee} ({award.Year}))");
