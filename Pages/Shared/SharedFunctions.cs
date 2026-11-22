@@ -24,7 +24,7 @@ public class SharedFunctions
         }
         if(SortAscending==false)
         {
-            arr.Reverse();
+            arr=arr.Reverse();
         }
         return arr.ToList();
     }
