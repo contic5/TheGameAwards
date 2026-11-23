@@ -30,16 +30,21 @@ public class SharedFunctions
     }
     public static List<SelectListItem> MakeSelectListItemsFromUniqueValues(IEnumerable<Object> arr,string key)
     {
-        var property = arr.ElementAt(0).GetType().GetProperty(key) ?? throw new ArgumentException($"No public Customer property named '{key}'.", nameof(key));
-        var allValues = arr.Where(c => c is not null).Select(c => property.GetValue(c)).Where(value => value is not null);
-        List<Object> uniqueValues=allValues.Distinct().OrderBy(val => val).ToList();
-        List<Object> sortedValues=uniqueValues.OrderBy(val=>val).ToList();
+        List<Object> uniqueValues=GetUniqueValues(arr,key);
+
         List<SelectListItem>  res= uniqueValues.Select(val => new SelectListItem
         {
             Value = val.ToString(),
             Text = val.ToString(),
         }).ToList();
         return res;
+    }
+    public static List<Object> GetUniqueValues(IEnumerable<Object> arr, string key)
+    {
+        var property = arr.ElementAt(0).GetType().GetProperty(key) ?? throw new ArgumentException($"No public Customer property named '{key}'.", nameof(key));
+        var allValues = arr.Where(c => c is not null).Select(c => property.GetValue(c)).Where(value => value is not null);
+        List<Object> uniqueValues=allValues.Distinct().OrderBy(val => val).ToList();
+        return uniqueValues;
     }
     public static List<SelectListItem> MakeSelectListItemsFromColumnNames(Object firstItem)
     {

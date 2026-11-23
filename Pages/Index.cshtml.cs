@@ -21,15 +21,18 @@ public class IndexModel : PageModel
     public int PageNumber {get; set;}=1;
 
     [BindProperty(SupportsGet = true)]
-    public int Year {get; set;}
+    public int TargetYear {get; set;}
 
     [BindProperty(SupportsGet = true)]
-    public string Company {get; set;}="";
+    public string TargetCompany {get; set;}="";
 
     [BindProperty(SupportsGet = true)]
-    public string Category {get; set;}="";
+    public string TargetCategory {get; set;}="";
 
-    public IEnumerable<AwardModel> awards {get; set;}
+    [BindProperty(SupportsGet = true)]
+    public string TargetGenre {get; set;}="";
+
+    public IEnumerable<AwardModel> Awards {get; set;}
 
 
     public List<SelectListItem> SortByItems {get; set;}=[];
@@ -41,28 +44,84 @@ public class IndexModel : PageModel
     public string Direction {get; set;}="-"; 
 
     public int TotalPages {get; set;}=0; 
-    
+
+    public IEnumerable<string> AllGenres {get; set;}=[];
+
+    public IEnumerable<string> AllCategories {get; set;}=[];
+    public IEnumerable<string> AllCompanies {get; set;}=[];
+
+    public IEnumerable<string> GetAllGenres(IEnumerable<AwardModel> Awards)
+    {
+        HashSet<string> uniqueGenres=new HashSet<string>();
+        foreach(var award in Awards)
+        {
+            if(award.Genres!=null&&award.Genres!="")
+            {
+                string [] genres=award.Genres.Split(",");
+                foreach(string genre in genres)
+                {
+                    uniqueGenres.Add(genre);
+                }
+            }
+        }
+        List<string> res=uniqueGenres.ToList();
+        res.Sort();
+        return res;
+    }
     public void OnGet()
     {
         string filePath = "Data/Game_Awards_Data_and_RAWG_Stable.xlsx";
 
         // This single line reads the sheet and binds it to your model list
-        awards = MiniExcel.Query<AwardModel>(filePath,sheetName:"Game_Awards");
+        Awards = MiniExcel.Query<AwardModel>(filePath,sheetName:"Game_Awards");
 
-        TotalPages= (int)Math.Ceiling(1.0*awards.Count()/50);
+        TotalPages= (int)Math.Ceiling(1.0*Awards.Count()/50);
 
-        Console.WriteLine($"Sort By: {SortBy} Sort Direction {Direction}");
+        AllCategories=SharedFunctions.GetUniqueValues(Awards,"Category").Select(category=>category.ToString());
+
+        AllCompanies=SharedFunctions.GetUniqueValues(Awards,"Company").Select(category=>category.ToString());
+
+
+        AllGenres=this.GetAllGenres(Awards);
+        Console.WriteLine(string.Join(',',AllGenres));
+
 
         if(SortBy!="")
         {
-            awards=SharedFunctions.SortValues(awards,SortBy,Direction=="-").Select(item => (AwardModel)item).ToList();
+            Console.WriteLine($"Sort By: {SortBy} Sort Direction {Direction}");
+
+            //Sort values
+            Awards=SharedFunctions.SortValues(Awards,SortBy,Direction=="-").Select(item => (AwardModel)item).ToList();
         }
 
-        awards= SharedFunctions.Slice(awards,PageNumber).Select(item => (AwardModel)item).ToList();
-        SortByItems=SharedFunctions.MakeSelectListItemsFromColumnNames(awards.GetItemByIndex(0));
-        foreach (var award in awards)
+        if(TargetYear!=0)
         {
-            Console.WriteLine($"{award.Nominee} ({award.Year}))");
+            Console.WriteLine(TargetYear);
+            Awards=Awards.Where(award=>award.Year==TargetYear);
         }
+
+        if(TargetGenre!="")
+        {
+            Console.WriteLine(TargetGenre);
+            Awards=Awards.Where(award=>award.Genres.Contains(TargetGenre));
+        }
+
+        if(TargetCompany!="")
+        {
+            Console.WriteLine(TargetCompany);   
+            Awards=Awards.Where(award=>award.Company==TargetCompany);
+        }
+
+        if(TargetCategory!="")
+        {
+            Console.WriteLine(TargetCategory); 
+            Awards=Awards.Where(award=>award.Category==TargetCategory);
+        }
+
+        //Filter Awards to current page only
+        Awards= SharedFunctions.Slice(Awards,PageNumber).Select(item => (AwardModel)item).ToList();
+
+        //Make sort by select items
+        SortByItems=SharedFunctions.MakeSelectListItemsFromColumnNames(Awards.GetItemByIndex(0));
     }
 }

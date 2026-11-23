@@ -13,6 +13,47 @@
     }
 
     <form method="get">
+    <div>
+    <label for="TargetYear">Target Year</label>
+    <input id="TargetYear" asp-for="TargetYear" />
+    </div>
+
+    <div>
+    <label for="TargetCategory">Target Category</label>
+    <input list="allcategories" id="TargetCategory asp-for="TargetCategory" />
+    <datalist id="allcategories">
+    <option value="">Any</option>
+    @foreach(var category in Model.AllCategories)
+    {
+        <option value=@category>@category</option>        
+    }
+    </datalist>
+    </div>
+
+    <div>
+    <label for="TargetCompany">Target Company</label>
+    <input list="allcompanies" id="TargetCompany" asp-for="TargetCompany" />
+    <datalist id="allcompanies">
+    <option value="">Any</option>
+    @foreach(var company in Model.AllCompanies)
+    {
+        <option value=@company>@company</option>        
+    }
+    </datalist>
+    </div>
+
+    <div>
+    <label for="TargetGenre">Target Genre</label>
+    <input list="allgenres" id="TargetGenre" asp-for="TargetGenre" />
+    <datalist id="allgenres">
+    <option value="">Any</option>
+    @foreach(var genre in Model.AllGenres)
+    {
+        <option value=@genre>@genre</option>        
+    }
+    </datalist>
+    </div>
+
     <select asp-for="SortBy" asp-items="Model.SortByItems">
     
     </select>
@@ -29,13 +70,13 @@
     <table class="table table-striped table-hover">
     <thead>
     <tr>
-    @foreach(var property in Model.awards.GetItemByIndex(0).GetType().GetProperties())
+    @foreach(var property in Model.Awards.GetItemByIndex(0).GetType().GetProperties())
     {
         <th>@property.Name</th>
     }
     </tr>
     </thead>
-    @foreach(AwardModel award in Model.awards)
+    @foreach(AwardModel award in Model.Awards)
     {
         <tr>
         @foreach(var property in award.GetType().GetProperties())
