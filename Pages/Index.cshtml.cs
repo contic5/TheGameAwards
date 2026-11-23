@@ -40,14 +40,14 @@ public class IndexModel : PageModel
     [BindProperty(SupportsGet = true)]
     public string Direction {get; set;}="-"; 
 
-    public int TotalPages {get; set;}=0;
+    public int TotalPages {get; set;}=0; 
     
     public void OnGet()
     {
-        string filePath = "Data/Game_Awards_Data_Stable.xlsx";
+        string filePath = "Data/Game_Awards_Data_and_RAWG_Stable.xlsx";
 
         // This single line reads the sheet and binds it to your model list
-        awards = MiniExcel.Query<AwardModel>(filePath);
+        awards = MiniExcel.Query<AwardModel>(filePath,sheetName:"Game_Awards");
 
         TotalPages= (int)Math.Ceiling(1.0*awards.Count()/50);
 

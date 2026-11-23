@@ -13,6 +13,13 @@ public class AwardModel
     public int Year {get; set;}
 
     public bool Winner {get; set;}
+
+    public string Genres {get; set;}
+
+    public double Metacritic {get; set;}
+
+    public double Rating {get; set;}
+    
     public AwardModel()
     {
         
