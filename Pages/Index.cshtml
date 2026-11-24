@@ -74,6 +74,7 @@
     {
         <th>@property.Name</th>
     }
+    <th>Details</th>
     </tr>
     </thead>
     @foreach(AwardModel award in Model.Awards)
@@ -83,6 +84,7 @@
         {
             <td>@property.GetValue(award)</td>
         }
+        <td><a asp-page="/Details" asp-route-GameID=@award.ID>Details</a></td>
         </tr>
     }
     </table>

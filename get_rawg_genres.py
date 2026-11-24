@@ -10,7 +10,7 @@ def main():
 
         genres=[]
 
-        genres_raw=row["genres"]
+        genres_raw=row["Genres"]
         genres_raw=genres_raw.replace("'",'"')
         print(genres_raw)
 

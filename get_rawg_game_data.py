@@ -37,7 +37,7 @@ def main():
         developer:str=row["Company"]
         developer=developer.lower()
         developer=developer.replace(" ","-")
-        if row["Is_Game"]:
+        if row["IsGame"]:
             print(index,row["Nominee"],row["Year"],developer)
             response=requests.get("https://api.rawg.io/api/games",params={"key":RAWG_API_KEY,"search":search_term,"developers":[developer]})
             content=json.loads(response.content)
