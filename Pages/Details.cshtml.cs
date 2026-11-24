@@ -21,6 +21,8 @@ namespace TheGameAwards.Pages
 
         [BindProperty(SupportsGet = true)]
         public int TargetID {get; set;}
+
+        public AwardDetailsModel Award {get; set;}
         public void OnGet(int GameID)
         {
             Console.WriteLine("Game ID: "+GameID);
@@ -28,9 +30,9 @@ namespace TheGameAwards.Pages
             string filePath = "Data/Game_Awards_Data_and_RAWG_Stable.xlsx";
 
             // This single line reads the sheet and binds it to your model list
-            IEnumerable<AwardModel> awards= MiniExcel.Query<AwardModel>(filePath,sheetName:"RAWG");
+            IEnumerable<AwardDetailsModel> awards= MiniExcel.Query<AwardDetailsModel>(filePath,sheetName:"RAWG");
 
-            AwardModel award=awards.Where(award=>award.ID==GameID).GetItemByIndex(0);
+            Award=awards.Where(award=>award.ID==GameID).GetItemByIndex(0);
         }
     }
 }

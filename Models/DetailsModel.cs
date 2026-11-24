@@ -1,4 +1,4 @@
-public class DetailsModel
+public class AwardDetailsModel
 {
     public int ID { get; set; }
     public string Slug { get; set; }
